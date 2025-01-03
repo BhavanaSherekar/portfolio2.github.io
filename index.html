@@ -515,7 +515,6 @@ https://templatemo.com/tm-567-nomad-force
                     </a>
 
                 </div> 
-                
                 <div class="portfolio-info">                     
                     <h4 class="portfolio-title mb-0">SDG's</h4>
                 </div>
@@ -524,6 +523,327 @@ https://templatemo.com/tm-567-nomad-force
                         <img src="images/SDG's.jpg" class="img-fluid portfolio-image" alt="">
                     </a>
                 </div>
+                <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Code Editor Simulation</title>
+                        <style>
+                            .code-editor {
+                                position: relative;
+                                background-color: #2d2d2d;
+                                padding: 20px;
+                                border-radius: 10px;
+                                color: #f8f8f2;
+                                font-size: 16px;
+                                overflow: auto;
+                                margin-top: 20px;
+                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                width: 100%;
+                                height: 500px;
+                                border: 2px solid #333;
+                            }
+                    
+                            textarea {
+                                width: 100%;
+                                height: 90%;
+                                background-color: #2d2d2d;
+                                color: #f8f8f2;
+                                font-family: "Courier New", Courier, monospace;
+                                border: none;
+                                padding: 10px;
+                                resize: none;
+                            }
+                    
+                            .run-btn {
+                                position: absolute;
+                                top: 10px;
+                                right: 10px;
+                                background-color: #4CAF50;
+                                color: white;
+                                border: none;
+                                border-radius: 5px;
+                                padding: 8px 16px;
+                                font-size: 14px;
+                                cursor: pointer;
+                                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                                transition: background-color 0.3s;
+                            }
+                    
+                            .run-btn:hover {
+                                background-color: #45a049;
+                            }
+                    
+                            .run-btn:active {
+                                background-color: #3e8e41;
+                            }
+                    
+                            .output {
+                                margin-top: 20px;
+                                padding: 20px;
+                                background-color: #333;
+                                color: #f8f8f2;
+                                border-radius: 10px;
+                                font-family: monospace;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                    
+                        <div class="code-editor">
+                            <button class="run-btn" onclick="runCode()">Run</button>
+                            <textarea id="codeArea">
+                    #include <iostream>
+                    #include <vector>
+                    #include <cmath>
+                    #include <fstream>
+                    
+                    using namespace std;
+                    
+                    // Function to check for excessive pesticide usage
+                    void checkThresholdAlert(const vector<int>& pesticide_usage, int threshold) {
+                        for (int i = 0; i < pesticide_usage.size(); ++i) {
+                            if (pesticide_usage[i] > threshold) {
+                                cout << "Alert: Excessive pesticide usage in region " << (i + 1) << ": " << pesticide_usage[i] << endl;
+                            }
+                        }
+                    }
+                    
+                    // Function to calculate the average pesticide usage
+                    double calculateAverage(const vector<int>& pesticide_usage) {
+                        int sum = 0;
+                        for (int i = 0; i < pesticide_usage.size(); ++i) {
+                            sum += pesticide_usage[i];
+                        }
+                        return static_cast<double>(sum) / pesticide_usage.size();
+                    }
+                    
+                    // Function to calculate the standard deviation of pesticide usage
+                    double calculateStdDev(const vector<int>& pesticide_usage, double avg) {
+                        double variance = 0;
+                        for (int i = 0; i < pesticide_usage.size(); ++i) {
+                            variance += pow(pesticide_usage[i] - avg, 2);
+                        }
+                        return sqrt(variance / pesticide_usage.size());
+                    }
+                    
+                    // Function to detect trends (increasing or decreasing usage)
+                    string detectTrend(const vector<int>& pesticide_usage) {
+                        int count_increase = 0;
+                        int count_decrease = 0;
+                    
+                        for (size_t i = 1; i < pesticide_usage.size(); ++i) {
+                            if (pesticide_usage[i] > pesticide_usage[i - 1]) {
+                                count_increase++;
+                            } else if (pesticide_usage[i] < pesticide_usage[i - 1]) {
+                                count_decrease++;
+                            }
+                        }
+                    
+                        if (count_increase > count_decrease) {
+                            return "Increasing usage trend detected";
+                        } else if (count_decrease > count_increase) {
+                            return "Decreasing usage trend detected";
+                        } else {
+                            return "No significant trend detected";
+                        }
+                    }
+                    
+                    // Function to export data to CSV
+                    void exportToCSV(const vector<int>& pesticide_usage) {
+                        ofstream file("pesticide_usage.csv");
+                        if (file.is_open()) {
+                            file << "Region,Pesticide Usage\n";  // CSV headers
+                            for (int i = 0; i < pesticide_usage.size(); ++i) {
+                                file << (i + 1) << "," << pesticide_usage[i] << "\n";
+                            }
+                            cout << "Data exported to pesticide_usage.csv" << endl;
+                            file.close();
+                        } else {
+                            cout << "Unable to open file for export." << endl;
+                        }
+                    }
+                    
+                    // Function to build the sparse table
+                    void buildSparseTable(const vector<int>& arr, vector<vector<int> >& st, vector<int>& log) {
+                        int n = arr.size();
+                        log[1] = 0;
+                        for (int i = 2; i <= n; ++i) {
+                            log[i] = log[i / 2] + 1;
+                        }
+                    
+                        // Initialize sparse table for the base case (interval length 1)
+                        for (int i = 0; i < n; ++i) {
+                            st[i][0] = arr[i];
+                        }
+                    
+                        // Build the sparse table for intervals of length 2, 4, 8, ...
+                        for (int j = 1; (1 << j) <= n; ++j) {
+                            for (int i = 0; i + (1 << j) - 1 < n; ++i) {
+                                st[i][j] = min(st[i][j - 1], st[i + (1 << (j - 1))][j - 1]);
+                            }
+                        }
+                    }
+                    
+                    // Function to query the minimum in the range [L, R]
+                    int query(int L, int R, const vector<vector<int> >& st, const vector<int>& log) {
+                        int length = R - L + 1;
+                        int j = log[length];
+                        return min(st[L][j], st[R - (1 << j) + 1][j]);
+                    }
+                    
+                    // Function to display the pesticide usage data in a simple histogram format
+                    void displayHistogram(const vector<int>& pesticide_usage) {
+                        cout << "\nPesticide Usage (Histogram View):\n";
+                        for (int i = 0; i < pesticide_usage.size(); ++i) {
+                            cout << "Region " << (i + 1) << ": ";
+                            for (int j = 0; j < pesticide_usage[i]; ++j) {
+                                cout << "*";
+                            }
+                            cout << " (" << pesticide_usage[i] << ")\n";
+                        }
+                    }
+                    
+                    // Function to input multiple pesticide usage values
+                    void inputPesticideUsage(vector<int>& pesticide_usage) {
+                        int n;
+                        cout << "Enter the number of regions: ";
+                        cin >> n;
+                        pesticide_usage.resize(n);
+                    
+                        cout << "Enter the pesticide usage for each region:\n";
+                        for (int i = 0; i < n; ++i) {
+                            cout << "Region " << (i + 1) << ": ";
+                            cin >> pesticide_usage[i];
+                        }
+                    }
+                    
+                    int main() {
+                        vector<int> pesticide_usage;
+                    
+                        // Input pesticide usage data
+                        inputPesticideUsage(pesticide_usage);
+                    
+                        // User-defined threshold for alerts
+                        int threshold;
+                        cout << "Enter the threshold value for excessive pesticide usage: ";
+                        cin >> threshold;
+                    
+                        // Sparse table and log array initialization
+                        int n = pesticide_usage.size();
+                        int max_log = log2(n) + 1;
+                        vector<vector<int> > st(n, vector<int>(max_log));
+                        vector<int> log(n + 1);
+                    
+                        // Build the sparse table
+                        buildSparseTable(pesticide_usage, st, log);
+                    
+                        while (true) {
+                            // Menu options
+                            cout << "\nMenu:\n";
+                            cout << "1. Query Minimum Pesticide Usage in Range\n";
+                            cout << "2. View Pesticide Usage Data\n";
+                            cout << "3. View Sparse Table\n";
+                            cout << "4. View Histogram\n";
+                            cout << "5. View Average Pesticide Usage\n";
+                            cout << "6. Check Threshold Alerts\n";
+                            cout << "7. View Trend Analysis\n";
+                            cout << "8. Export Data to CSV\n";
+                            cout << "9. Exit\n";
+                            cout << "Enter your choice: ";
+                    
+                            int choice;
+                            cin >> choice;
+                    
+                            if (choice == 1) {
+                                // Query minimum pesticide usage in range
+                                int num_queries;
+                                cout << "Enter the number of queries: ";
+                                cin >> num_queries;
+                    
+                                for (int i = 0; i < num_queries; ++i) {
+                                    int L, R;
+                                    cout << "Enter the start index (L) for query " << (i + 1) << ": ";
+                                    cin >> L;
+                                    cout << "Enter the end index (R) for query " << (i + 1) << ": ";
+                                    cin >> R;
+                    
+                                    if (L < 0 || R >= n || L > R) {
+                                        cout << "Invalid range. Please enter again.\n";
+                                        --i;
+                                        continue;
+                                    }
+                    
+                                    cout << "Minimum pesticide usage between region " << (L + 1) << " and " << (R + 1) << ": "
+                                         << query(L, R, st, log) << endl;
+                                }
+                            }
+                            else if (choice == 2) {
+                                // View pesticide usage data
+                                cout << "\nPesticide Usage Data:\n";
+                                for (int i = 0; i < pesticide_usage.size(); ++i) {
+                                    cout << "Region " << (i + 1) << ": " << pesticide_usage[i] << endl;
+                                }
+                            }
+                            else if (choice == 3) {
+                                // Display the sparse table
+                                cout << "\nSparse Table:\n";
+                                for (int i = 0; i < st.size(); ++i) {
+                                    for (int j = 0; j < st[i].size(); ++j) {
+                                        cout << st[i][j] << " ";
+                                    }
+                                    cout << endl;
+                                }
+                            }
+                            else if (choice == 4) {
+                                // View histogram
+                                displayHistogram(pesticide_usage);
+                            }
+                            else if (choice == 5) {
+                                // View average pesticide usage
+                                double avg = calculateAverage(pesticide_usage);
+                                cout << "Average pesticide usage: " << avg << endl;
+                            }
+                            else if (choice == 6) {
+                                // Check threshold alerts
+                                checkThresholdAlert(pesticide_usage, threshold);
+                            }
+                            else if (choice == 7) {
+                                // View trend analysis
+                                cout << detectTrend(pesticide_usage) << endl;
+                            }
+                            else if (choice == 8) {
+                                // Export data to CSV
+                                exportToCSV(pesticide_usage);
+                            }
+                            else if (choice == 9) {
+                                // Exit the program
+                                cout << "Exiting the program. Goodbye!\n";
+                                break;
+                            }
+                            else {
+                                cout << "Invalid choice. Please try again.\n";
+                            }
+                        }
+                    
+                        return 0;
+                    }
+                            </textarea>
+                        </div>
+                    
+                        <div class="output" id="output">
+                            Output will appear here...
+                        </div>
+                    
+                        <script>
+                            function runCode() {
+                                // Simulate running the C++ code
+                                const output = "Hello, World!"; // You can modify this part to reflect different outputs based on user input.
+                                document.getElementById("output").innerText = output;
+                            }
+                        </script>
+                    </body>
+                    </html>
             </div>
         </div>
     </div>
@@ -1053,7 +1373,7 @@ https://templatemo.com/tm-567-nomad-force
                     <div class="team-img position-relative overflow-hidden">
                         <img class="img-fluid w-100 equal-height" src="images/srishti2.jpg" alt="">
                         <div class="team-social">
-                            <a class="btn btn-outline-primary btn-square" href=""><i class="fab fa-github"></i></a>
+                            <a class="btn btn-outline-primary btn-square" href="https://twitter.com/Srishti Manvi"><i class="fab fa-twitter"></i></a>
                             <a class="btn btn-outline-primary btn-square" href="https://linkedin.com/in/Srishti Manvi"><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-outline-primary btn-square" href="https://instagram.com/srishti_s_manvi"><i class="fab fa-instagram"></i></a>
                             <a class="btn btn-outline-primary btn-square" href="https://github.com/Srishti Manvi"><i class="fab fa-linkedin-in"></i></a>
